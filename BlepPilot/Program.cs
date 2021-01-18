@@ -2,7 +2,7 @@
 
 namespace BlepPilot
 {
-    class Program
+    class DiscordBot
     {
         static void Main(string[] args)
         {
