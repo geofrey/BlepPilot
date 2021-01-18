@@ -1,6 +1,7 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -73,8 +74,26 @@ namespace BlepPilot
                 }
             };
 
+            Boolean everConnected = false;
+            api.SocketOpened += async () =>
+            {
+                await Console.Out.WriteLineAsync("connection opened");
+                everConnected = true;
+            };
+
+            Boolean disconnected = false;
+            api.SocketClosed += async (e) =>
+            {
+                //if (e.Client == api)
+                //{
+                    await Console.Out.WriteLineAsync("connection closed");
+                    disconnected = true;
+                //}
+            };
+
             await api.ConnectAsync();
-            await Task.Delay(-1); // TODO exit when the bot has disconnected
+            while (!everConnected) await Task.Delay(1000);
+            while (!disconnected) await Task.Delay(1000);
         }
     }
 }
