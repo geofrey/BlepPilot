@@ -64,6 +64,13 @@ namespace BlepPilot
                     await e.Message.RespondAsync("Nothing happens.");
                     Console.Out.WriteLine($"did nothing for {e.Author}");
                 }
+
+                if(e.Message.Content == "begone, bot") // TODO probably don't leave this in
+                {
+                    await e.Message.RespondAsync("Botface OUT");
+                    Console.Out.WriteLine($"banished by {e.Author}");
+                    await api.DisconnectAsync();
+                }
             };
 
             await api.ConnectAsync();
