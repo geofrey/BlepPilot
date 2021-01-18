@@ -66,7 +66,7 @@ namespace BlepPilot
                     Console.Out.WriteLine($"did nothing for {e.Author}");
                 }
 
-                if(e.Message.Content == "begone, bot") // TODO probably don't leave this in
+                if(e.Message.Content == "begone, bot")
                 {
                     await e.Message.RespondAsync("Botface OUT");
                     Console.Out.WriteLine($"banished by {e.Author}");
@@ -84,11 +84,8 @@ namespace BlepPilot
             Boolean disconnected = false;
             api.SocketClosed += async (e) =>
             {
-                //if (e.Client == api)
-                //{
-                    await Console.Out.WriteLineAsync("connection closed");
-                    disconnected = true;
-                //}
+                await Console.Out.WriteLineAsync("connection closed");
+                disconnected = true;
             };
 
             await api.ConnectAsync();
