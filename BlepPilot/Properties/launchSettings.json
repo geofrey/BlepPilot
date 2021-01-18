@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BlepPilot": {
+      "commandName": "Project",
+      "commandLineArgs": "%userprofile%\\.blep\\DiscordToken.txt"
+    }
+  }
+}
