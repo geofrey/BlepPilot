@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DSharpPlus;
+using DSharpPlus.Entities;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace BlepPilot
 {
@@ -21,7 +24,7 @@ namespace BlepPilot
         {
             try
             {
-                apiToken = File.ReadAllText(path);
+                apiToken = File.ReadAllText(path).Trim();
             }
             catch (Exception whoopsadoodle)
             {
@@ -34,13 +37,37 @@ namespace BlepPilot
     {
         static void Main(string[] args)
         {
-            Runtime settings = new Runtime(args);
-            run(settings);
+            try
+            {
+                Runtime settings = new Runtime(args);
+                run(settings).GetAwaiter().GetResult();
+            }
+            catch(Exception malfunction)
+            {
+                Console.Error.WriteLine($"oh no program error: {malfunction}");
+            }
         }
 
-        static void run(Runtime settings)
+        static async Task run(Runtime settings)
         {
-            Console.WriteLine($"bot token value is \"{settings.apiToken}\"");
+            //Console.WriteLine($"bot token value is \"{settings.apiToken}\"");
+            DiscordConfiguration config = new DiscordConfiguration()
+            {
+                Token = settings.apiToken,
+                TokenType = TokenType.Bot
+            };
+            DiscordClient api = new DiscordClient(config);
+
+            api.MessageCreated += async (e) => {
+                if (e.Message.Content == "xyzzy")
+                {
+                    await e.Message.RespondAsync("Nothing happens.");
+                    Console.Out.WriteLine($"did nothing for {e.Author}");
+                }
+            };
+
+            await api.ConnectAsync();
+            await Task.Delay(-1); // TODO exit when the bot has disconnected
         }
     }
 }
