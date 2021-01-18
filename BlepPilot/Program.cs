@@ -3,28 +3,44 @@ using System.IO;
 
 namespace BlepPilot
 {
+    class Runtime
+    {
+        public String apiToken;
+
+        public Runtime(String[] args)
+        {
+            if (args.Length < 1)
+            {
+                throw new ArgumentException("expected path to Discord bot token file as first argument");
+            }
+
+            loadAPIToken(args[0]);
+        }
+
+        void loadAPIToken(String path)
+        {
+            try
+            {
+                apiToken = File.ReadAllText(path);
+            }
+            catch (Exception whoopsadoodle)
+            {
+                throw new Exception("could not read token file", whoopsadoodle);
+            }
+        }
+    }
+
     class DiscordBot
     {
         static void Main(string[] args)
         {
-            String apiToken;
+            Runtime settings = new Runtime(args);
+            run(settings);
+        }
 
-            try {
-                if (args.Length < 1)
-                {
-                    throw new ArgumentException("expected path to Discord bot token file as first argument");
-                }
-                String pathToToken = args[0];
-                Console.Out.WriteLine($"read {pathToToken}");
-
-                apiToken = File.ReadAllText(pathToToken);
-            } catch (Exception whoopsadoodle)
-            {
-                Console.Error.WriteLine($"couk  wvszld not open token file: {whoopsadoodle}");
-                return;
-            }
-
-            Console.WriteLine($"bot token value is \"{apiToken}\"");
+        static void run(Runtime settings)
+        {
+            Console.WriteLine($"bot token value is \"{settings.apiToken}\"");
         }
     }
 }
